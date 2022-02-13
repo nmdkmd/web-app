@@ -1,0 +1,57 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Gradle@2
+  displayName: Build project
+  inputs:
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'build'
+
+- task: Gradle@2
+  displayName: Build Docker image
+  inputs:
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'bootBuildImage'
+
+ 
+- task: DownloadSecureFile@1
+  name: caCertificate
+  displayName: 'Download CA certificate'
+  inputs:
+   secureFile: 'tls.crt'
+  script: |
+   echo Installing $(caCertificate.secureFilePath) to the trusted CA
+   sudo chown root:root $(caCertificate.secureFilePath)
+   sudo chmod a+r $(caCertificate.secureFilePath)
+   sudo ln -s -t /etc/ssl/certs/ $(caCertificate.secureFilePath)
+
+- task: Docker@2
+  displayName: Push Docker image
+  inputs:
+    containerRegistry: 'openshift-image-registry'
+    repository: ''
+    command: 'push'
+    tags: 'latest'
