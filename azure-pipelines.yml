@@ -24,7 +24,7 @@ steps:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
     cmd: 'oc expose svc webapp-from-pipeline --hostname webapp-from-pipeline.apps.mgmt.kmdstratus.com --name wfp'
-- task: oc-cmd@4
+- task: oc-cmd@3
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
