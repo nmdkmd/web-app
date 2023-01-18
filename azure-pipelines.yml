@@ -9,13 +9,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
-- task: oc-cmd@2
+- task: oc-cmd@1
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
@@ -24,4 +18,17 @@ steps:
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
-    cmd: 'oc new-app --name web-from-pipeline https://github.com/nmdkmd/web-app.git -n $(NMD-NAMESPACE)'
+    cmd: 'oc new-app --name webapp-from-pipeline https://github.com/nmdkmd/web-app.git -n $(NMD-NAMESPACE)'
+- task: oc-cmd@3
+  inputs:
+    connectionType: 'OpenShift Connection Service'
+    openshiftService: 'ocp-mgmt'
+    cmd: 'oc expose svc webapp-from-pipeline --hostname webapp-from-pipeline.apps.mgmt.kmdstratus.com --name wfp'
+- task: oc-cmd@4
+  inputs:
+    connectionType: 'OpenShift Connection Service'
+    openshiftService: 'ocp-mgmt'
+    inlineScript: |
+     #!/bin/bash
+     ROUTE: $(oc get route wfp -o jsonpath='{.spec.host}{"\n"}')
+     echo "Webapp URL: http://$ROUTE"
