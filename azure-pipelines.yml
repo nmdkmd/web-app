@@ -30,5 +30,5 @@ steps:
     targetType: 'inline'
     script: |
       #!/bin/bash
-      ROUTE:=$(oc get route wfp -o jsonpath='{.spec.host}{"\n"}')
+      ROUTE=$(oc get route wfp -o jsonpath='{.spec.host}{"\n"}')
       echo "Webapp URL: http://$ROUTE"
