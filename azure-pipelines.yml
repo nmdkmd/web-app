@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
@@ -10,17 +5,17 @@ pool:
   vmImage: ubuntu-latest
 steps:
 
-- task: oc-cmd@3
+- task: oc-cmd@4
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
     cmd: 'oc new-project $(NMD-NAMESPACE)'
-- task: oc-cmd@3
+- task: oc-cmd@4
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
     cmd: 'oc new-app --name webapp-from-pipeline https://github.com/nmdkmd/web-app.git -n $(NMD-NAMESPACE)'
-- task: oc-cmd@3
+- task: oc-cmd@4
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
