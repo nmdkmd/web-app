@@ -18,10 +18,10 @@ steps:
 - task: oc-cmd@2
   inputs:
     connectionType: 'OpenShift Connection Service'
-    openshiftService: 'skat-temp-connection'
+    openshiftService: 'ocp-mgmt'
     cmd: 'oc new-project $(NMD-NAMESPACE)'
 - task: oc-cmd@2
   inputs:
     connectionType: 'OpenShift Connection Service'
-    openshiftService: 'skat-temp-connection'
-    cmd: 'oc new-app https://github.com/nmdkmd/web-app.git -n $(NMD-NAMESPACE)'
+    openshiftService: 'ocp-mgmt'
+    cmd: 'oc new-app --name web-from-pipeline https://github.com/nmdkmd/web-app.git -n $(NMD-NAMESPACE)'
