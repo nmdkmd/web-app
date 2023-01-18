@@ -9,7 +9,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 steps:
-- task: oc-cmd@1
+- task: oc-cmd@2
   inputs:
     connectionType: 'OpenShift Connection Service'
     openshiftService: 'ocp-mgmt'
